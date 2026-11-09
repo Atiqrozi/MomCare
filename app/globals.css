@@ -1,0 +1,71 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
+@import "tailwindcss";
+
+:root {
+  --background: #f8fafc;
+  --foreground: #17243d;
+  --muted: #64748b;
+  --brand: #ff4f91;
+  --brand-dark: #e52d73;
+  --accent: #38b6ff;
+  --mint: #fff0f6;
+  --line: #e8edf4;
+  --card: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.field {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  background: #f8fafc;
+  padding: 0.75rem 0.875rem;
+  font-weight: 400;
+  outline: none;
+  color: var(--foreground);
+}
+.field:focus {
+  border-color: var(--brand);
+  background: white;
+  box-shadow: 0 0 0 3px rgb(255 79 145 / 0.14);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-brand: var(--brand);
+  --color-brand-dark: var(--brand-dark);
+  --color-accent: var(--accent);
+  --color-mint: var(--mint);
+  --color-line: var(--line);
+  --color-card: var(--card);
+}
