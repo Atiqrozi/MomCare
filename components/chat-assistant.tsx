@@ -23,7 +23,6 @@ type ChatMessage = {
   messageType?: "text" | "appointment_reminder" | "appointment_result";
   payload?: AppointmentPayload;
 };
-type MessageList = { data: ChatMessage[] };
 type ApiAppointmentAction = { resultMessage?: ChatMessage };
 type AppointmentSlot = { startsAt: string; endsAt: string; durationMinutes: number };
 type AppointmentSlotList = { slots: AppointmentSlot[]; message?: string };
@@ -43,8 +42,8 @@ export function ChatAssistant() {
         const conversation = await browserApi<Conversation>("/chat/conversations", { method: "POST", body: JSON.stringify({ kind: "AI", title: "Konsultasi MOMENT AI" }) });
         if (cancelled) return;
         setConversationId(conversation._id);
-        const history = await browserApi<MessageList>(`/chat/conversations/${encodeURIComponent(conversation._id)}/messages?limit=100`);
-        if (!cancelled) setMessages(history.data ?? []);
+        const history = await browserApi<ChatMessage[]>(`/chat/conversations/${encodeURIComponent(conversation._id)}/messages?limit=100`);
+        if (!cancelled) setMessages(history);
       } catch (cause) { if (!cancelled) setError(cause instanceof Error ? cause.message : "Chat belum dapat dimuat."); }
     })();
     return () => { cancelled = true; };
@@ -55,8 +54,8 @@ export function ChatAssistant() {
     let cancelled = false;
     const refresh = async () => {
       try {
-        const history = await browserApi<MessageList>(`/chat/conversations/${encodeURIComponent(conversationId)}/messages?limit=100`);
-        if (!cancelled) setMessages((current) => mergeMessages(current, history.data ?? []));
+        const history = await browserApi<ChatMessage[]>(`/chat/conversations/${encodeURIComponent(conversationId)}/messages?limit=100`);
+        if (!cancelled) setMessages((current) => mergeMessages(current, history));
       } catch { /* Chat can retry on the next poll. */ }
     };
     const timer = window.setInterval(refresh, 15_000);

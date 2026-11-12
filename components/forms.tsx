@@ -35,17 +35,35 @@ export function AuthForm({ mode, demoMode = false }: { mode: "login" | "register
   </form>;
 }
 
-export function JournalForm() {
+export function JournalForm({ journalId, initialData, onCancel }: { journalId?: string; initialData?: { entryDate: string; mood?: string; notes?: string; symptoms?: string[] }; onCancel?: () => void }) {
   const router = useRouter();
   const [error, setError] = useState("");
+  const [pending, setPending] = useState(false);
   async function submit(form: FormData) {
     setError("");
+    const entryDate = String(form.get("entryDate") ?? "").trim();
+    const date = new Date(`${entryDate}T00:00:00.000Z`);
+    const mood = String(form.get("mood") ?? "").trim();
+    const notes = String(form.get("notes") ?? "").trim();
+    const symptoms = String(form.get("symptoms") ?? "").split(",").map((value) => value.trim()).filter(Boolean);
+    if (!entryDate || Number.isNaN(date.getTime())) { setError("Tanggal jurnal tidak valid. Pilih tanggal kembali."); return; }
+    if (mood.length > 50) { setError("Suasana hati maksimal 50 karakter."); return; }
+    if (symptoms.length > 20) { setError("Gejala maksimal 20 item. Gabungkan atau hapus gejala yang berlebih."); return; }
+    if (symptoms.some((symptom) => symptom.length > 100)) { setError("Setiap gejala maksimal 100 karakter."); return; }
+    if (notes.length > 2000) { setError("Catatan maksimal 2.000 karakter."); return; }
+    setPending(true);
     try {
-      const response = await fetch("/api/proxy/pregnancy/journals", { method: "POST", body: JSON.stringify({ entryDate: `${form.get("entryDate")}T00:00:00.000Z`, mood: form.get("mood"), notes: form.get("notes"), symptoms: String(form.get("symptoms") ?? "").split(",").map((v) => v.trim()).filter(Boolean) }) });
-      if (!response.ok) throw new Error("Jurnal belum dapat disimpan. Coba lagi.");
-      router.push("/kehamilan/jurnal");
+      const response = await fetch(journalId ? `/api/proxy/pregnancy/journals/${encodeURIComponent(journalId)}` : "/api/proxy/pregnancy/journals", { method: journalId ? "PATCH" : "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ entryDate: date.toISOString(), ...(mood ? { mood } : {}), ...(notes ? { notes } : {}), symptoms }) });
+      const payload = await response.json().catch(() => null) as { message?: string; details?: Array<{ messages?: string[] }> } | null;
+      if (!response.ok) {
+        const validation = payload?.details?.flatMap((detail) => detail.messages ?? []).filter(Boolean).join(" ");
+        throw new Error(validation || payload?.message || "Jurnal belum dapat disimpan. Coba lagi.");
+      }
+      if (onCancel) onCancel();
+      else router.push("/kehamilan/jurnal");
       router.refresh();
     } catch (e) { setError(e instanceof Error ? e.message : "Terjadi kesalahan"); }
+    finally { setPending(false); }
   }
-  return <Card><form action={submit} className="max-w-2xl space-y-5"><label className="block text-sm font-bold">Tanggal<input name="entryDate" type="date" required defaultValue={new Date().toISOString().slice(0, 10)} className="field mt-2" /></label><label className="block text-sm font-bold">Suasana hati<input name="mood" maxLength={50} className="field mt-2" placeholder="Contoh: Tenang" /></label><label className="block text-sm font-bold">Gejala <span className="font-normal text-muted">(pisahkan dengan koma, maksimal 20)</span><input name="symptoms" className="field mt-2" placeholder="Mudah lelah, mual" /></label><label className="block text-sm font-bold">Catatan <span className="font-normal text-muted">(maksimal 2.000 karakter)</span><textarea name="notes" maxLength={2000} rows={5} className="field mt-2" placeholder="Tuliskan catatan pribadi Anda..." /></label>{error && <p className="text-sm text-red-600">{error}</p>}<Button type="submit">Simpan jurnal</Button></form></Card>;
+  return <Card><form action={submit} className="max-w-2xl space-y-5"><label className="block text-sm font-bold">Tanggal<input name="entryDate" type="date" required defaultValue={initialData?.entryDate.slice(0, 10) ?? new Date().toISOString().slice(0, 10)} className="field mt-2" /></label><label className="block text-sm font-bold">Suasana hati<input name="mood" maxLength={50} defaultValue={initialData?.mood ?? ""} className="field mt-2" placeholder="Contoh: Tenang" /></label><label className="block text-sm font-bold">Gejala <span className="font-normal text-muted">(pisahkan dengan koma, maksimal 20 item dan 100 karakter per item)</span><input name="symptoms" defaultValue={initialData?.symptoms?.join(", ") ?? ""} className="field mt-2" placeholder="Mudah lelah, mual" /></label><label className="block text-sm font-bold">Catatan <span className="font-normal text-muted">(maksimal 2.000 karakter)</span><textarea name="notes" maxLength={2000} rows={5} defaultValue={initialData?.notes ?? ""} className="field mt-2" placeholder="Tuliskan catatan pribadi Anda..." /></label>{error && <p role="alert" className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}<div className="flex gap-2"><Button type="submit" disabled={pending}>{pending ? "Menyimpan jurnal..." : journalId ? "Simpan perubahan" : "Simpan jurnal"}</Button>{journalId && onCancel && <Button type="button" variant="secondary" disabled={pending} onClick={onCancel}>Batal</Button>}</div></form></Card>;
 }

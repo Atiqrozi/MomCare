@@ -6,7 +6,6 @@ import { browserApi } from "@/lib/browser-api";
 import { Card } from "./ui";
 
 type Patient = { userId: string; patient?: { fullName?: string }; latestRiskAssessment?: { level: string; mapMmHg: number; assessedAt: string; reasons: string[] } | null };
-type PatientList = { data: Patient[] };
 type Conversation = { _id: string; patientId: string; providerId?: string; kind: string; lastMessageAt: string };
 type ChatMessage = { _id: string; senderRole: string; text: string; createdAt: string };
 
@@ -20,7 +19,7 @@ export function RiskScreening() {
   const [result, setResult] = useState<{ assessment: { mapMmHg: number; level: string; reasons: string[] }; nextStep: string; disclaimer: string } | null>(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
-  useEffect(() => { browserApi<PatientList>("/dashboard/patients?limit=100").then((data) => { setPatients(data.data ?? []); if (data.data?.[0]) setPatientId(data.data[0].userId); }).catch((cause) => setError(cause instanceof Error ? cause.message : "Daftar pasien gagal dimuat.")); }, []);
+  useEffect(() => { browserApi<Patient[]>("/dashboard/patients?limit=100").then((data) => { setPatients(data); if (data[0]) setPatientId(data[0].userId); }).catch((cause) => setError(cause instanceof Error ? cause.message : "Daftar pasien gagal dimuat.")); }, []);
   function toggle(sign: string) { setSigns((current) => current.includes(sign) ? current.filter((item) => item !== sign) : [...current, sign]); }
   async function submit(event: FormEvent) {
     event.preventDefault(); setBusy(true); setError(""); setResult(null);
@@ -47,13 +46,13 @@ export function StaffChatInbox() {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   async function refresh() {
-    const [patientData, conversationData] = await Promise.all([browserApi<PatientList>("/dashboard/patients?limit=100"), browserApi<Conversation[]>("/chat/conversations")]);
-    setPatients(patientData.data ?? []); setConversations(conversationData ?? []);
+    const [patientData, conversationData] = await Promise.all([browserApi<Patient[]>("/dashboard/patients?limit=100"), browserApi<Conversation[]>("/chat/conversations")]);
+    setPatients(patientData); setConversations(conversationData);
   }
   useEffect(() => { refresh().catch((cause) => setError(cause instanceof Error ? cause.message : "Kotak masuk gagal dimuat.")); }, []);
   async function openConversation(id: string) {
     setActive(id); setError("");
-    try { const result = await browserApi<{ data: ChatMessage[] }>(`/chat/conversations/${encodeURIComponent(id)}/messages?limit=100`); setMessages(result.data ?? []); }
+    try { const result = await browserApi<ChatMessage[]>(`/chat/conversations/${encodeURIComponent(id)}/messages?limit=100`); setMessages(result); }
     catch (cause) { setError(cause instanceof Error ? cause.message : "Pesan gagal dimuat."); }
   }
   async function startConversation() {

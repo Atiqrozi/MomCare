@@ -40,7 +40,6 @@ export function AppointmentCreateForm({ patients = [], facilities = [], initialP
           facilityId: form.get("facilityId"),
           scheduledAt: new Date(localDate).toISOString(),
           visitType: form.get("visitType"),
-          reminderMinutesBefore: Number(form.get("reminderMinutesBefore")),
           notes: form.get("notes"),
         }),
       });
