@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { clearSessionCookies, refreshCookieName } from "@/lib/auth-cookies";
 
-export async function GET(request: NextRequest) {
-  const response = NextResponse.redirect(new URL("/", request.url));
+export async function POST(request: NextRequest) {
+  const response = NextResponse.redirect(new URL("/", request.url), 303);
   const refreshToken = request.cookies.get(refreshCookieName())?.value;
   console.log("[session-monitor]", JSON.stringify({ event: "logout_route_called", hasRefreshCookie: Boolean(refreshToken), at: new Date().toISOString() }));
   if (refreshToken && process.env.NEXT_PUBLIC_ENABLE_MOCKS !== "true") {
