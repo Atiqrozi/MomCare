@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import type { User } from "@/lib/types";
+import { setSessionCookies } from "@/lib/auth-cookies";
 
-type LoginPayload = { data?: { accessToken?: string; user?: User }; accessToken?: string; user?: User; message?: string };
+type LoginPayload = { data?: { accessToken?: string; refreshToken?: string; user?: User }; accessToken?: string; refreshToken?: string; user?: User; message?: string };
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
@@ -23,14 +24,13 @@ export async function POST(request: Request) {
     if (!response.ok) return NextResponse.json({ message: payload.message ?? "Email atau kata sandi tidak valid." }, { status: response.status });
 
     const token = payload.data?.accessToken ?? payload.accessToken;
+    const refreshToken = payload.data?.refreshToken ?? payload.refreshToken;
     const user = payload.data?.user ?? payload.user;
-    if (!token || !user?.role || !user.id) {
+    if (!token || !refreshToken || !user?.role || !user.id) {
       return NextResponse.json({ message: "Respons autentikasi backend tidak lengkap; sesi tidak dibuat." }, { status: 502 });
     }
     const result = NextResponse.json({ success: true, data: user });
-    result.cookies.set(process.env.AUTH_COOKIE_NAME ?? "moment_at", token, { httpOnly: true, sameSite: "lax", secure: process.env.AUTH_COOKIE_SECURE === "true", path: "/" });
-    result.cookies.set(process.env.AUTH_ROLE_COOKIE_NAME ?? "moment_role", user.role, { httpOnly: true, sameSite: "lax", secure: process.env.AUTH_COOKIE_SECURE === "true", path: "/" });
-    return result;
+    return setSessionCookies(result, { accessToken: token, refreshToken, role: user.role });
   } catch {
     return NextResponse.json({ message: "Backend tidak dapat dihubungi. Pastikan server API berjalan." }, { status: 502 });
   }
