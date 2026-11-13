@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, FileHeart } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
+import { NakesShell } from "@/components/nakes-shell";
 import { MedicalAttachmentLink } from "@/components/medical-attachment-link";
 import { Card, ClinicalDisclaimer, PageTitle, StatusBadge } from "@/components/ui";
 import { getCurrentUser } from "@/lib/session";
@@ -8,7 +9,7 @@ import { serverApi } from "@/lib/api";
 
 type Attachment = { kind: string; name: string; mimeType: string; url?: string; fileId?: string };
 type MedicalRecord = {
-  _id: string; recordDate: string; recordType: string; summary: string; verificationStatus: string;
+  _id: string; patientId: string; recordDate: string; recordType: string; summary: string; verificationStatus: string;
   verificationNote?: string; verifiedAt?: string;
   measurements?: {
     weightKg?: number; heightCm?: number; systolicMmHg?: number; diastolicMmHg?: number;
@@ -43,6 +44,7 @@ export default async function MedicalRecordDetailPage({ params }: { params: Prom
   const user = await getCurrentUser();
   if (!user) return null;
   const { id } = await params;
+  const isNakes = user.role !== "PREGNANT_MOTHER";
   let record: MedicalRecord | null = null;
   let error = "";
   try {
@@ -51,8 +53,9 @@ export default async function MedicalRecordDetailPage({ params }: { params: Prom
     error = cause instanceof Error ? cause.message : "Detail rekam medis gagal dimuat.";
   }
 
-  return <AppShell user={user}>
-    <Link href="/rekam-medis" className="mb-5 inline-flex items-center gap-2 text-sm font-bold text-brand hover:underline"><ArrowLeft className="size-4" /> Kembali ke daftar rekam medis</Link>
+  const Shell = isNakes ? NakesShell : AppShell;
+  return <Shell user={user}>
+    <Link href={isNakes ? `/dashboard/pasien/${encodeURIComponent(record?.patientId ?? "")}` : "/rekam-medis"} className="mb-5 inline-flex items-center gap-2 text-sm font-bold text-brand hover:underline"><ArrowLeft className="size-4" /> {isNakes ? "Kembali ke profil pasien" : "Kembali ke daftar rekam medis"}</Link>
     <PageTitle eyebrow="Riwayat kesehatan" title={record?.recordType ?? "Detail rekam medis"} description={record ? formatDate(record.recordDate) : "Rincian hasil pemeriksaan ANC."} />
     <ClinicalDisclaimer />
     {error ? <Card className="mt-6 border-red-200 bg-red-50 text-sm text-red-800">Detail rekam medis gagal dimuat: {error}</Card> : record ? <div className="mt-6 space-y-5">
@@ -68,5 +71,5 @@ export default async function MedicalRecordDetailPage({ params }: { params: Prom
 
       {record.details?.attachments?.length ? <Card><h2 className="font-black">Lampiran pemeriksaan</h2><div className="mt-4 flex flex-wrap gap-2">{record.details.attachments.map((file, index) => file.fileId ? <MedicalAttachmentLink key={`${file.fileId}-${index}`} recordId={record._id} fileId={file.fileId} name={file.name} label={file.kind === "ultrasound" ? "Buka lampiran USG" : "Buka hasil laboratorium"} /> : file.url ? <a key={`${file.name}-${index}`} href={file.url} target="_blank" rel="noreferrer" className="rounded-lg bg-blue-50 px-3 py-2 text-xs font-bold text-blue-700">Buka {file.name}</a> : null)}</div></Card> : null}
     </div> : <Card className="mt-6 text-sm text-muted">Rekam medis tidak ditemukan atau tidak dapat diakses.</Card>}
-  </AppShell>;
+  </Shell>;
 }
