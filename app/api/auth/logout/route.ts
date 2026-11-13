@@ -1,6 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { clearSessionCookies, refreshCookieName } from "@/lib/auth-cookies";
 
+// Legacy Next.js Link prefetches may still request this route with GET.
+// Keep GET explicitly side-effect-free: only POST is allowed to log out.
+export async function GET(request: NextRequest) {
+  console.warn("[session-monitor]", JSON.stringify({
+    event: "logout_get_blocked",
+    method: request.method,
+    pathname: request.nextUrl.pathname,
+    at: new Date().toISOString(),
+  }));
+  return NextResponse.json(
+    { success: false, message: "Logout harus menggunakan POST" },
+    { status: 405, headers: { Allow: "POST" } },
+  );
+}
+
 export async function POST(request: NextRequest) {
   const origin = request.headers.get("origin");
   const fetchSite = request.headers.get("sec-fetch-site");
