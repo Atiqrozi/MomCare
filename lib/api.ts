@@ -30,10 +30,14 @@ export async function serverApi<T>(path: string, init?: RequestInit): Promise<T>
       cache: "no-store",
     });
   } catch {
+    console.error("[session-monitor]", JSON.stringify({ event: "server_api_network_error", path, at: new Date().toISOString() }));
     throw new ApiError(`Backend API tidak dapat dihubungi di ${url.origin}. Pastikan server backend berjalan dan API_BASE_URL mengarah ke alamat yang benar.`, 503);
   }
   const payload = (await response.json().catch(() => null)) as Partial<ApiEnvelope<T>> | null;
   if (!response.ok) {
+    if (response.status === 401 || response.status === 403) {
+      console.warn("[session-monitor]", JSON.stringify({ event: "server_api_auth_error", path, status: response.status, requestId: response.headers.get("x-request-id"), at: new Date().toISOString() }));
+    }
     throw new ApiError(
       payload?.message ?? `Permintaan gagal (${response.status})`,
       response.status,

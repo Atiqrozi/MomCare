@@ -40,6 +40,10 @@ async function forward(request: NextRequest, context: { params: Promise<{ path: 
   let refreshed: { accessToken: string; refreshToken: string; role: string } | null = null;
   let clearCookies = false;
 
+  if (upstream.status === 401 || upstream.status === 403) {
+    console.warn("[session-monitor]", JSON.stringify({ event: "proxy_auth_error", path: path.join("/"), method: request.method, status: upstream.status, hasAccessCookie: Boolean(accessToken), hasRefreshCookie: Boolean(refreshToken), requestId, at: new Date().toISOString() }));
+  }
+
   if (upstream.status === 401 && refreshToken) {
     try {
       const refreshResponse = await fetch(`${apiBase()}/auth/refresh`, {
@@ -54,14 +58,19 @@ async function forward(request: NextRequest, context: { params: Promise<{ path: 
       const newRefreshToken = data?.refreshToken;
       const role = data?.user?.role;
       if (refreshResponse.ok && newAccessToken && newRefreshToken && role) {
+        console.log("[session-monitor]", JSON.stringify({ event: "proxy_refresh_succeeded", path: path.join("/"), requestId, role, at: new Date().toISOString() }));
         accessToken = newAccessToken;
         refreshed = { accessToken, refreshToken: newRefreshToken, role };
         headers.set("Authorization", `Bearer ${accessToken}`);
         upstream = await fetch(target, { method: request.method, headers, body, cache: "no-store" });
       } else if (refreshResponse.status === 401 || refreshResponse.status === 403) {
+        console.warn("[session-monitor]", JSON.stringify({ event: "proxy_refresh_rejected", path: path.join("/"), status: refreshResponse.status, requestId, at: new Date().toISOString() }));
         clearCookies = true;
+      } else {
+        console.error("[session-monitor]", JSON.stringify({ event: "proxy_refresh_failed", path: path.join("/"), status: refreshResponse.status, requestId, at: new Date().toISOString() }));
       }
-    } catch {
+    } catch (error) {
+      console.error("[session-monitor]", JSON.stringify({ event: "proxy_refresh_network_error", path: path.join("/"), requestId, error: error instanceof Error ? error.message : "unknown", at: new Date().toISOString() }));
       // Return the original API response if refreshing is temporarily unavailable.
     }
   }
