@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowUpRight, BookOpen, Search } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { Card, EmptyState, PageTitle } from "@/components/ui";

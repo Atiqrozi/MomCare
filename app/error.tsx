@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 export default function AppError({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
   return <main className="flex min-h-screen items-center justify-center bg-slate-50 p-5">

@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { AppShell } from "@/components/app-shell";
 import { Card, EmptyState, PageTitle } from "@/components/ui";
 import { demoJournals } from "@/lib/mock-data";

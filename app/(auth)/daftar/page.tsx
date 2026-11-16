@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { PregnancyRegistrationForm } from "@/components/pregnancy-registration-form";
 
 export default function RegisterPage() {

@@ -1,4 +1,4 @@
-import { CalendarDays, Clock3, MapPin } from "lucide-react";
+﻿import { CalendarDays, Clock3, MapPin } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { AppointmentActions } from "@/components/appointment-actions";
 import { Card, EmptyState, PageTitle, StatusBadge } from "@/components/ui";

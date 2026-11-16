@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, BookOpen } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
@@ -18,5 +18,5 @@ export default async function EducationDetail({ params }: { params: Promise<{ sl
     ? (await serverApi<Education>(`/education/${encodeURIComponent(slug)}`).catch(() => null)) ?? demoEducation.find((education) => education.slug === slug)
     : demoEducation.find((education) => education.slug === slug);
   if (!item) notFound();
-  return <AppShell user={user}><article className="mx-auto max-w-3xl py-5"><Link href="/edukasi" className="flex items-center gap-2 text-sm font-bold text-brand"><ArrowLeft className="size-4" />Kembali ke edukasi</Link><span className="mt-8 inline-flex items-center gap-2 rounded-full bg-mint px-3 py-1 text-xs font-bold text-brand"><BookOpen className="size-4" />{item.category}</span><h1 className="mt-5 text-4xl font-black leading-tight">{item.title}</h1><p className="mt-4 text-muted">Diperbarui {formatDate(item.updatedAt)}</p><Card className="mt-8"><EducationArticleBody body={item.body} /></Card><div className="mt-6"><ClinicalDisclaimer /></div><div className="mt-8 rounded-2xl border border-line bg-white p-5 text-sm"><p className="font-bold">Sumber materi</p><p className="mt-2 text-muted">{item.sourceTitle} · {item.sourceVersion}</p></div></article></AppShell>;
+  return <AppShell user={user}><article className="mx-auto max-w-3xl py-5"><Link href="/edukasi" className="flex items-center gap-2 text-sm font-bold text-brand"><ArrowLeft className="size-4" />Kembali ke edukasi</Link><span className="mt-8 inline-flex items-center gap-2 rounded-full bg-mint px-3 py-1 text-xs font-bold text-brand"><BookOpen className="size-4" />{item.category}</span><h1 className="mt-5 text-4xl font-black leading-tight">{item.title}</h1><p className="mt-4 text-muted">Diperbarui {formatDate(item.updatedAt)}</p><Card className="mt-8"><EducationArticleBody body={item.body} /></Card><div className="mt-6"><ClinicalDisclaimer /></div><div className="mt-8 rounded-2xl border border-line bg-white p-5 text-sm"><p className="font-bold">Sumber materi</p><p className="mt-2 text-muted">{item.sourceTitle} Â· {item.sourceVersion}</p></div></article></AppShell>;
 }

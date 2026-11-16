@@ -1,4 +1,4 @@
-import { Syringe } from "lucide-react";
+﻿import { Syringe } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { Card, EmptyState, PageTitle, StatusBadge } from "@/components/ui";
 import { getCurrentUser } from "@/lib/session";

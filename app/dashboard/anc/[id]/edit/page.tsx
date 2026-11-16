@@ -1,4 +1,4 @@
-import { notFound, redirect } from "next/navigation";
+﻿import { notFound, redirect } from "next/navigation";
 import type { ComponentProps } from "react";
 import { MedicalRecordForm } from "@/components/medical-record-form";
 import { NakesShell } from "@/components/nakes-shell";

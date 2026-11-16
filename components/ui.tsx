@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowRight, CheckCircle2, CircleAlert, Loader2 } from "lucide-react";
 import { appointmentLabels, clinicalDisclaimer } from "@/lib/constants";
 import type { AppointmentStatus } from "@/lib/types";

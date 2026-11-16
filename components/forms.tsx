@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -28,7 +28,7 @@ export function AuthForm({ mode, demoMode = false }: { mode: "login" | "register
     {mode === "register" && <label className="block text-sm font-bold">Nama lengkap<input name="fullName" required maxLength={120} className="field mt-2" placeholder="Nama Anda" /></label>}
     <label className="block text-sm font-bold">Email<input name="email" type="email" required className="field mt-2" placeholder="nama@email.com" /></label>
     {mode === "register" && <label className="block text-sm font-bold">Nomor telepon <span className="font-normal text-muted">(opsional)</span><input name="phone" className="field mt-2" placeholder="08xxxxxxxxxx" /></label>}
-    <label className="block text-sm font-bold">Kata sandi<input name="password" type="password" required minLength={mode === "register" ? 8 : 1} className="field mt-2" placeholder="••••••••" /></label>
+    <label className="block text-sm font-bold">Kata sandi<input name="password" type="password" required minLength={mode === "register" ? 8 : 1} className="field mt-2" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" /></label>
     {mode === "register" && <label className="flex items-start gap-3 text-sm text-muted"><input name="consentGranted" type="checkbox" required className="mt-1 accent-brand" /><span>Saya menyetujui penggunaan data untuk layanan MomCare.</span></label>}
     {error && <div role="alert" className="rounded-lg bg-red-50 p-3 text-sm text-red-700"><p>{error}</p>{mode === "login" && error.toLowerCase().includes("verifikasi") && <Link href={`/verifikasi-akun?email=${encodeURIComponent(emailForVerification)}`} className="mt-2 inline-block font-bold underline">Verifikasi akun / kirim ulang kode</Link>}</div>}
     <Button type="submit" className="w-full">{loading ? "Memproses..." : mode === "login" ? "Masuk ke aplikasi" : "Buat akun"}</Button>

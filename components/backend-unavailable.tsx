@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 
 export function BackendUnavailable({ detail = "API MomCare belum bisa dihubungi." }: { detail?: string }) {

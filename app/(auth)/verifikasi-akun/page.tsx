@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { RegistrationVerificationForm } from "@/components/registration-verification-form";
 
 export default async function VerifyRegistrationPage({ searchParams }: { searchParams: Promise<{ email?: string }> }) {

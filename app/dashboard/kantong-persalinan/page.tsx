@@ -1,4 +1,4 @@
-import { NakesShell } from "@/components/nakes-shell";
+﻿import { NakesShell } from "@/components/nakes-shell";
 import { PageTitle } from "@/components/ui";
 import { DemoBanner } from "@/components/nakes-ui";
 import { LaborBagConsole, type LaborBagData } from "@/components/labor-bag-console";

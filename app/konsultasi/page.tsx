@@ -1,4 +1,4 @@
-import { AppShell } from "@/components/app-shell";
+﻿import { AppShell } from "@/components/app-shell";
 import { PatientConsultation } from "@/components/patient-consultation";
 import { Card, ClinicalDisclaimer, PageTitle } from "@/components/ui";
 import { getCurrentUser } from "@/lib/session";
