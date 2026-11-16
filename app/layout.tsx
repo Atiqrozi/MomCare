@@ -1,5 +1,6 @@
 ﻿import type { Metadata } from "next";
 import "./globals.css";
+import { ResponsiveTableLabels } from "@/components/responsive-table-labels";
 
 export const metadata: Metadata = {
   title: "MomCare â€” Pendamping perjalanan kehamilan",
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="id">
-      <body>{children}</body>
+      <body><ResponsiveTableLabels />{children}</body>
     </html>
   );
 }

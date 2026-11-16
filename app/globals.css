@@ -65,9 +65,23 @@ select {
   table.responsive-table thead { display: none; }
   table.responsive-table tbody { display: grid; gap: 0.75rem; }
   table.responsive-table tbody tr { display: grid; gap: 0; overflow: hidden; border: 1px solid #e8edf4; border-radius: 1rem; background: #fff; box-shadow: 0 1px 3px rgb(15 23 42 / 0.05); }
-  table.responsive-table tbody td { display: grid; grid-template-columns: minmax(6rem, 38%) minmax(0, 1fr); align-items: start; gap: 0.75rem; border-bottom: 1px solid #f1f5f9; padding: 0.75rem 0.875rem !important; text-align: left !important; overflow-wrap: anywhere; }
+  table.responsive-table tbody td { display: grid; grid-template-columns: minmax(6rem, 38%) minmax(0, 1fr); align-items: start; gap: 0.75rem; border-bottom: 1px solid #f1f5f9; padding: 0.75rem 0.875rem !important; text-align: left !important; overflow-wrap: anywhere; color: #334155; font-size: 0.75rem; font-weight: 600; }
   table.responsive-table tbody td:last-child { border-bottom: 0; }
-  table.responsive-table tbody td::before { content: attr(data-label); color: #64748b; font-size: 0.68rem; font-weight: 700; line-height: 1.35; }
+  table.responsive-table tbody td::before { content: attr(data-label); color: #334155; font-size: 0.75rem; font-weight: 600; line-height: 1.35; }
+  table.patient-responsive-table tbody td { color: #334155; font-size: 0.75rem; font-weight: 600; }
+  table.patient-responsive-table tbody td::before { color: #334155; font-size: 0.75rem; font-weight: 600; }
+  table.patient-responsive-table tbody td:nth-child(2)::before { content: "Usia & Gol. Darah"; }
+  table.patient-responsive-table tbody td:nth-child(3)::before { content: "Usia Kehamilan"; }
+  table.patient-responsive-table tbody td:nth-child(4)::before { content: "Risiko & MAP"; }
+  table.patient-responsive-table tbody td:nth-child(5)::before { content: "Rekomendasi Lahir"; }
+  table.patient-responsive-table tbody td:nth-child(6)::before { content: "Aksi Rekam Medis"; }
+  table.patient-responsive-table tbody td:first-child { grid-template-columns: minmax(6rem, 38%) minmax(0, 1fr); }
+  table.patient-responsive-table tbody td:first-child::before { content: "Nama"; grid-column: 1; grid-row: 1; }
+  table.patient-responsive-table tbody td:first-child > a { grid-column: 2; grid-row: 1; }
+  table.patient-responsive-table tbody td:first-child > p { display: contents; }
+  table.patient-responsive-table tbody td:first-child > p::before { content: "NIK / JKN"; grid-column: 1; grid-row: 2; color: #334155; font-size: 0.75rem; font-weight: 600; }
+  table.patient-responsive-table tbody td:first-child > p { grid-column: 1 / -1; }
+  table.patient-responsive-table tbody td:nth-child(6) > div { justify-content: flex-start; flex-wrap: wrap; }
 }
 
 @theme inline {
