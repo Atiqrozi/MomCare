@@ -24,10 +24,6 @@ const settingsLink: NavItem = ["/dashboard/pengaturan", "Pengaturan", Settings];
 const adminLink: NavItem = ["/dashboard/administrasi", "Administrasi", UserCog];
 const serviceLink: NavItem = ["/dashboard/layanan-rs", "Kelola layanan RS", Building2];
 
-function BrandMark() {
-  return <svg viewBox="0 0 100 100" className="h-10 w-10 shrink-0" aria-hidden="true"><defs><linearGradient id="moment-heart-shell" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#ff5ca8"/><stop offset="100%" stopColor="#38b6ff"/></linearGradient></defs><path d="M50 88C50 88 12 64 12 36 12 20 25 10 38 10 45 10 50 15 50 15 50 15 55 10 62 10 75 10 88 20 88 36 88 64 50 88 50 88Z" fill="url(#moment-heart-shell)"/><circle cx="39" cy="36" r="8.5" fill="white"/><circle cx="60" cy="44" r="6.5" fill="white"/><path d="M27 56C27 47 35 45 43 47 48 48 53 54 53 62H32C28 62 27 59 27 56Z" fill="white"/></svg>;
-}
-
 export function NakesShell({ user, children }: { user: User; children: React.ReactNode }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
