@@ -6,6 +6,7 @@ import { Baby, Bell, CalendarDays, ChevronDown, FileBarChart, HeartPulse, Home, 
 import { useEffect, useState } from "react";
 import { roleLabels } from "@/lib/constants";
 import type { User } from "@/lib/types";
+import { BrandLogo } from "@/components/brand-logo";
 import { ACTIVE_PATIENT_EVENT, ACTIVE_PATIENT_STORAGE_KEY, clearActivePatient, parseActivePatient, type ActivePatient } from "@/lib/active-patient";
 
 type NavItem = readonly [string, string, LucideIcon];
@@ -63,7 +64,7 @@ export function NakesShell({ user, children }: { user: User; children: React.Rea
   return <div className="min-h-screen bg-[#f7f9fc]">
     <aside className={`fixed inset-y-0 left-0 z-40 w-80 border-r border-sky-100 bg-gradient-to-b from-sky-50 via-white to-white transition-transform lg:translate-x-0 ${open ? "translate-x-0" : "-translate-x-full"}`}>
       <div className="flex h-full min-h-0 flex-col p-5">
-        <div className="flex items-center justify-between"><Link href="/dashboard" className="flex items-center gap-3"><BrandMark /><div><b className="text-lg tracking-tight text-slate-900"><span className="text-slate-900">Mom</span><span className="text-pink-500">Care</span></b><p className="text-[10px] font-semibold text-slate-400">Maternal Journey Assistant</p></div></Link><button aria-label="Tutup menu" className="lg:hidden" onClick={() => setOpen(false)}><X className="size-5" /></button></div>
+        <div className="flex items-center justify-between"><Link href="/dashboard" aria-label="MomCare dashboard" className="flex items-center"><BrandLogo className="h-16 w-auto" /></Link><button aria-label="Tutup menu" className="lg:hidden" onClick={() => setOpen(false)}><X className="size-5" /></button></div>
         <div className="mt-6 shrink-0 rounded-xl border border-sky-100 bg-white/80 p-3"><p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Fasilitas aktif</p><p className="mt-1 text-sm font-bold text-slate-800">RS KORPRI Pura Raharja</p><p className="mt-1 text-xs text-slate-500">Poli KIA Â· Terhubung</p></div>
         <p className="mb-2 mt-5 shrink-0 px-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">Menu utama</p>
         <nav aria-label="Menu dashboard" className="min-h-0 flex-1 space-y-1 overflow-y-auto overscroll-contain pb-3 pr-1 [scrollbar-color:#cbd5e1_transparent] [scrollbar-width:thin]">{nav.map(([href, label, Icon]) => { const active = pathname === href || (href !== "/dashboard" && pathname.startsWith(`${href}/`)); return <Link onClick={() => setOpen(false)} key={href} href={href} className={`flex items-center gap-3 rounded-2xl px-3.5 py-3 text-sm font-semibold transition ${active ? "bg-gradient-to-r from-blue-600 to-sky-500 text-white shadow-md shadow-blue-200" : "text-slate-700 hover:bg-sky-100/80 hover:text-blue-700"}`}><Icon className="size-[19px] shrink-0" />{label}</Link>; })}</nav>

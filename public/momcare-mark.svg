@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 305" role="img" aria-label="MomCare">
+  <defs><linearGradient id="pink" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f73588"/><stop offset="1" stop-color="#c91669"/></linearGradient><linearGradient id="blue" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#20b8f1"/><stop offset="1" stop-color="#0871c9"/></linearGradient></defs>
+  <path fill="url(#pink)" d="M131 7c-49 0-89 38-89 88 0 26 12 48 31 65-34 12-59 43-59 79 0 39 29 66 69 66h89c62 0 108-46 108-108 0-37-18-69-48-88 5-12 8-25 8-39C240 35 193 7 131 7Z"/>
+  <path fill="#fff" d="M89 108c17-31 48-48 84-46 20 1 37 9 50 22-5 26-21 47-43 59 13 16 21 37 21 60 0 36-18 67-47 83H91c-25 0-42-17-42-41 0-27 20-48 49-51 31-4 52-21 59-47-30-4-55-18-68-39Z"/>
+  <path fill="url(#blue)" d="M67 196c2-30 23-50 50-50 25 0 44 18 46 42 1 14-5 27-15 36 16 7 27 22 27 41v16H82c-27 0-45-16-45-40 0-21 12-37 30-45Z"/>
+  <path d="M128 167c9-9 25-8 32 3m-20 17c9 8 21 10 32 5M85 225c13 0 23 8 26 19m55-21c-3 18-17 33-36 37" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="7"/>
+</svg>

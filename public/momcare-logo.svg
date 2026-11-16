@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 390" role="img" aria-labelledby="title desc">
+  <title id="title">MomCare</title>
+  <desc id="desc">Maternal Care and Assistance</desc>
+  <defs>
+    <linearGradient id="pink" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f73588"/><stop offset="1" stop-color="#c91669"/></linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#20b8f1"/><stop offset="1" stop-color="#0871c9"/></linearGradient>
+  </defs>
+  <g transform="translate(91 8)">
+    <path fill="url(#pink)" d="M131 7c-49 0-89 38-89 88 0 26 12 48 31 65-34 12-59 43-59 79 0 39 29 66 69 66h89c62 0 108-46 108-108 0-37-18-69-48-88 5-12 8-25 8-39C240 35 193 7 131 7Z"/>
+    <path fill="#fff" d="M89 108c17-31 48-48 84-46 20 1 37 9 50 22-5 26-21 47-43 59 13 16 21 37 21 60 0 36-18 67-47 83H91c-25 0-42-17-42-41 0-27 20-48 49-51 31-4 52-21 59-47-30-4-55-18-68-39Z"/>
+    <path fill="url(#blue)" d="M67 196c2-30 23-50 50-50 25 0 44 18 46 42 1 14-5 27-15 36 16 7 27 22 27 41v16H82c-27 0-45-16-45-40 0-21 12-37 30-45Z"/>
+    <path d="M128 167c9-9 25-8 32 3m-20 17c9 8 21 10 32 5" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="7"/>
+    <path d="M85 225c13 0 23 8 26 19m55-21c-3 18-17 33-36 37" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="8"/>
+    <path d="M84 98c17-21 42-34 70-34 15 0 28 3 41 10-15 2-27 9-38 19-23 20-44 32-73 31-13 0-25-3-36-9 14-3 26-9 36-17Z" fill="#ff8fc1"/>
+  </g>
+  <text x="220" y="310" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="62" font-weight="800" letter-spacing="-3"><tspan fill="#102f60">MOM</tspan><tspan fill="#ec247d">CARE</tspan></text>
+  <text x="220" y="345" text-anchor="middle" fill="#102f60" font-family="Arial, Helvetica, sans-serif" font-size="19" font-style="italic">Maternal Care and Assistance</text>
+  <path d="M78 368c74 14 212 13 276-1" fill="none" stroke="#ec438d" stroke-linecap="round" stroke-width="4"/>
+  <path d="M374 352c-10-12-29-5-24 10l14 15 16-16c7-8-2-19-12-9m-1 3v13m-6-7h12" fill="none" stroke="#ec438d" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+</svg>
