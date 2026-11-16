@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -26,7 +26,7 @@ function estimatedHpl(patient?: PatientOption) {
   hpl.setUTCDate(hpl.getUTCDate() + 280);
   return hpl.toISOString().slice(0, 10);
 }
-function formatDate(value?: string) { return value ? new Intl.DateTimeFormat("id-ID", { dateStyle: "medium", timeZone: "Asia/Jakarta" }).format(new Date(value)) : "â€”"; }
+function formatDate(value?: string) { return value ? new Intl.DateTimeFormat("id-ID", { dateStyle: "medium", timeZone: "Asia/Jakarta" }).format(new Date(value)) : "Belum dihitung"; }
 
 export function LaborBagConsole({ initialData }: { initialData: LaborBagData }) {
   const [data, setData] = useState(() => normalizeData(initialData));
@@ -91,8 +91,8 @@ export function LaborBagConsole({ initialData }: { initialData: LaborBagData }) 
     const [y, m, d] = patient.lmpDate!.slice(0, 10).split("-").map(Number);
     const [ey, em, ed] = examinationDate.split("-").map(Number);
     const days = Math.floor((Date.UTC(ey, em - 1, ed) - Date.UTC(y, m - 1, d)) / 86_400_000);
-    return days >= 0 ? `${Math.floor(days / 7)} minggu ${days % 7} hari` : "â€”";
-  })() : "â€”";
+    return days >= 0 ? `${Math.floor(days / 7)} minggu ${days % 7} hari` : "Belum dihitung";
+  })() : "Belum dihitung";
 
   return <div className="space-y-5">
     {(notice || error) && <p role={error ? "alert" : "status"} className={`rounded-xl p-3 text-sm ${error ? "bg-red-50 text-red-700" : "bg-emerald-50 text-emerald-700"}`}>{error || notice}</p>}
@@ -114,7 +114,7 @@ export function LaborBagConsole({ initialData }: { initialData: LaborBagData }) 
     </section>
     <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
       <div className="border-b border-slate-100 p-5"><h2 className="text-lg font-black">Daftar Kantong Persalinan</h2><p className="mt-1 text-sm text-slate-500">Pasien diurutkan berdasarkan tanggal perkiraan persalinan.</p></div>
-      <div className="overflow-x-auto responsive-table-wrap"><table className="responsive-table w-full min-w-[1050px] text-left text-sm"><thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500"><tr><th className="p-4">Tanggal periksa</th><th className="p-4">Nama pasien</th><th className="p-4">RM</th><th className="p-4">Penjamin ANC</th><th className="p-4">HPL</th><th className="p-4">Jenis persalinan</th><th className="p-4">Umur kehamilan</th><th className="p-4">DPJP</th><th className="p-4">Aksi</th></tr></thead><tbody className="divide-y divide-slate-100">{sortedEntries.map((item) => <tr key={item._id} className="hover:bg-slate-50"><td className="p-4">{formatDate(item.examinationDate)}</td><td className="p-4 font-bold text-slate-900">{item.patientName}</td><td className="p-4"><Link href={`/dashboard/pasien/${encodeURIComponent(item.patientId)}`} className="font-bold text-blue-700 hover:underline">Lihat RM</Link></td><td className="p-4">{item.insuranceType === "BPJS" ? "BPJS" : "Umum"}</td><td className="p-4">{formatDate(item.estimatedDueDate)}</td><td className="p-4">{item.deliveryType === "SC" ? "SC" : "Spontan"}</td><td className="p-4">{item.gestationalWeeks == null ? "â€”" : `${item.gestationalWeeks} minggu ${item.gestationalDays ?? 0} hari`}</td><td className="p-4">{item.providerName}</td><td className="p-4"><div className="flex gap-3"><button type="button" onClick={() => choosePatient(item.patientId)} className="font-bold text-blue-700">Ubah</button><button type="button" disabled={busy} onClick={() => void remove(item.patientId)} className="font-bold text-red-600">Hapus</button></div></td></tr>)}</tbody></table>{!sortedEntries.length && <p className="p-10 text-center text-sm text-slate-500">Belum ada pasien di Kantong Persalinan. Tambahkan pasien melalui form di atas.</p>}</div>
+      <div className="overflow-x-auto responsive-table-wrap"><table className="responsive-table w-full min-w-[1050px] text-left text-sm"><thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500"><tr><th className="p-4">Tanggal periksa</th><th className="p-4">Nama pasien</th><th className="p-4">RM</th><th className="p-4">Penjamin ANC</th><th className="p-4">HPL</th><th className="p-4">Jenis persalinan</th><th className="p-4">Umur kehamilan</th><th className="p-4">DPJP</th><th className="p-4">Aksi</th></tr></thead><tbody className="divide-y divide-slate-100">{sortedEntries.map((item) => <tr key={item._id} className="hover:bg-slate-50"><td className="p-4">{formatDate(item.examinationDate)}</td><td className="p-4 font-bold text-slate-900">{item.patientName}</td><td className="p-4"><Link href={`/dashboard/pasien/${encodeURIComponent(item.patientId)}`} className="font-bold text-blue-700 hover:underline">Lihat RM</Link></td><td className="p-4">{item.insuranceType === "BPJS" ? "BPJS" : "Umum"}</td><td className="p-4">{formatDate(item.estimatedDueDate)}</td><td className="p-4">{item.deliveryType === "SC" ? "SC" : "Spontan"}</td><td className="p-4">{item.gestationalWeeks == null ? "Belum dihitung" : `${item.gestationalWeeks} minggu ${item.gestationalDays ?? 0} hari`}</td><td className="p-4">{item.providerName}</td><td className="p-4"><div className="flex gap-3"><button type="button" onClick={() => choosePatient(item.patientId)} className="font-bold text-blue-700">Ubah</button><button type="button" disabled={busy} onClick={() => void remove(item.patientId)} className="font-bold text-red-600">Hapus</button></div></td></tr>)}</tbody></table>{!sortedEntries.length && <p className="p-10 text-center text-sm text-slate-500">Belum ada pasien di Kantong Persalinan. Tambahkan pasien melalui form di atas.</p>}</div>
       <p className="border-t border-slate-100 px-5 py-3 text-xs text-slate-400">{sortedEntries.length} pasien terdaftar.</p>
     </section>
   </div>;
