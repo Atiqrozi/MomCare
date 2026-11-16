@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { AlertTriangle } from "lucide-react";
 import { NakesShell } from "@/components/nakes-shell";
 import { Card, EmptyState, PageTitle, StatusBadge } from "@/components/ui";
@@ -32,6 +32,6 @@ export default async function MissedAppointmentsPage() {
     <PageTitle eyebrow="Tindak lanjut" title="Jadwal terlewat" description="Daftar mengikuti status dan aturan jadwal dari backend." />
     {!live && <DemoBanner>Data tindak lanjut contoh untuk prototipe.</DemoBanner>}
     <Card className="border-amber-200 bg-amber-50"><div className="flex gap-3 text-amber-800"><AlertTriangle className="size-5 shrink-0" /><p className="text-sm">Hubungi pasien sesuai cakupan dan izin komunikasi yang berlaku. MomCare tidak menentukan kondisi klinis pasien.</p></div></Card>
-    <div className="mt-5 space-y-3">{rows.length ? rows.map((item) => <Card key={item.id}><div className="flex flex-wrap items-center gap-4"><div className="grid size-11 place-items-center rounded-xl bg-red-100 text-red-600"><AlertTriangle /></div><div className="flex-1"><p className="font-black">{item.name}</p><p className="mt-1 text-sm text-slate-500">{item.type} Â· {item.when}</p></div><StatusBadge status={item.status} /><Link href={`/dashboard/pasien/${encodeURIComponent(item.patientId)}`} className="text-sm font-bold text-teal-700">Detail</Link></div></Card>) : <EmptyState title="Tidak ada jadwal terlewat" description="Jadwal yang perlu ditindaklanjuti akan muncul di sini." />}</div>
+    <div className="mt-5 space-y-3">{rows.length ? rows.map((item) => <Card key={item.id}><div className="flex flex-wrap items-center gap-4"><div className="grid size-11 place-items-center rounded-xl bg-red-100 text-red-600"><AlertTriangle /></div><div className="flex-1"><p className="font-black">{item.name}</p><p className="mt-1 text-sm text-slate-500">{item.type} · {item.when}</p></div><StatusBadge status={item.status} /><Link href={`/dashboard/pasien/${encodeURIComponent(item.patientId)}`} className="text-sm font-bold text-teal-700">Detail</Link></div></Card>) : <EmptyState title="Tidak ada jadwal terlewat" description="Jadwal yang perlu ditindaklanjuti akan muncul di sini." />}</div>
   </NakesShell>;
 }

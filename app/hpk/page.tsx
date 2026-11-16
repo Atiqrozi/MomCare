@@ -1,4 +1,4 @@
-﻿import { getCurrentUser } from "@/lib/session";
+import { getCurrentUser } from "@/lib/session";
 import { AppShell } from "@/components/app-shell";
 import { PageTitle } from "@/components/ui";
 import { HpkJourney } from "@/components/hpk-journey";
@@ -19,7 +19,7 @@ export default async function HpkPage() {
     serverApi<Immunization[]>("/pregnancy/children/immunizations").catch(() => []),
   ]) : [null, { child: null, data: [] }, []];
   return <AppShell user={user}>
-    <PageTitle eyebrow="Pendampingan keluarga" title="Tumbuh Kembang Anak Â· 1000 HPK" description="Panduan imunisasi, pemantauan pertumbuhan, nutrisi, dan stimulasi pada dua tahun pertama kehidupan." />
+    <PageTitle eyebrow="Pendampingan keluarga" title="Tumbuh Kembang Anak · 1000 HPK" description="Panduan imunisasi, pemantauan pertumbuhan, nutrisi, dan stimulasi pada dua tahun pertama kehidupan." />
     <HpkJourney initialChild={child} initialGrowth={growth.data} initialImmunizations={immunizations} live={live} />
   </AppShell>;
 }
