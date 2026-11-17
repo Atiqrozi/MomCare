@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, ReactNode, useEffect, useState } from "react";
 import { MessageCircle, Send, Sparkles } from "lucide-react";
 import { browserApi } from "@/lib/browser-api";
 import { Card } from "./ui";
@@ -83,11 +83,62 @@ export function ChatAssistant() {
   return <Card className="mt-6 max-w-3xl"><div className="flex items-center gap-3 border-b border-line pb-4"><div className="grid size-11 place-items-center rounded-full bg-mint text-brand"><Sparkles /></div><div><h2 className="font-black"><span className="text-slate-900">Mom</span><span className="text-pink-500">Care</span> Assistant</h2><p className="text-xs text-muted">Informasi pendamping kehamilan</p></div></div>
     <div className="my-5 max-h-[55vh] space-y-3 overflow-y-auto" aria-live="polite">{messages.length === 0 && <p className="rounded-2xl bg-slate-50 p-4 text-sm leading-6">Halo Bunda. Tanyakan informasi umum tentang kehamilan atau persiapan kunjungan ANC. Chat ini bukan layanan gawat darurat.</p>}{messages.map((message) => message.messageType === "appointment_reminder" && message.payload
       ? <AppointmentReminderCard key={message._id} conversationId={conversationId} message={message} onResult={appendMessage} />
-      : <div key={message._id} className={`max-w-[88%] rounded-2xl p-4 text-sm leading-6 ${message.senderRole === "ASSISTANT" ? "bg-slate-50" : "ml-auto bg-brand text-white"}`}>{message.text}</div>)}</div>
+      : <div key={message._id} className={`max-w-[88%] rounded-2xl p-4 text-sm leading-6 ${message.senderRole === "ASSISTANT" ? "bg-slate-50" : "ml-auto bg-brand text-white"}`}>{message.senderRole === "ASSISTANT" ? <AssistantMessageText text={message.text} /> : message.text}</div>)}</div>
     <form onSubmit={send} className="space-y-3"><textarea className="field" rows={3} value={text} maxLength={4000} onChange={(event) => setText(event.target.value)} placeholder="Tulis pertanyaan..." /><label className="flex items-start gap-2 text-xs leading-5 text-muted"><input type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} className="mt-1 accent-brand" /><span>Saya setuju isi pesan diproses oleh penyedia AI yang dikonfigurasi untuk MomCare.</span></label><div className="flex items-center justify-between"><p className="flex items-center gap-2 text-xs text-muted"><MessageCircle className="size-4 text-brand" />Bukan pengganti tenaga kesehatan.</p><button disabled={busy || !conversationId} className="flex items-center gap-2 rounded-xl bg-brand px-4 py-3 text-sm font-bold text-white disabled:opacity-50"><Send className="size-4" />{busy ? "Mengirim..." : "Kirim"}</button></div></form>
     {error && <p role="alert" className="mt-3 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">{error}</p>}
     <p className="mt-3 text-xs text-muted">Jawaban AI bersifat informasional, bukan diagnosis atau pengganti keputusan tenaga kesehatan. Untuk gejala berat, segera hubungi fasilitas kesehatan.</p>
   </Card>;
+}
+
+function renderBold(text: string, keyPrefix: string): ReactNode[] {
+  return text.split(/(\*\*[^*]+\*\*)/g).filter(Boolean).map((part, index) =>
+    part.startsWith("**") && part.endsWith("**")
+      ? <strong key={`${keyPrefix}-${index}`}>{part.slice(2, -2)}</strong>
+      : part,
+  );
+}
+
+function AssistantMessageText({ text }: { text: string }) {
+  const blocks: ReactNode[] = [];
+  const lines = text.replace(/\r/g, "").split("\n");
+  let paragraph: string[] = [];
+  let items: string[] = [];
+  let listType: "ul" | "ol" | null = null;
+
+  const flushParagraph = () => {
+    if (!paragraph.length) return;
+    const content = paragraph.join(" ");
+    blocks.push(<p key={`p-${blocks.length}`} className="mb-2 last:mb-0">{renderBold(content, `p-${blocks.length}`)}</p>);
+    paragraph = [];
+  };
+  const flushList = () => {
+    if (!items.length || !listType) return;
+    const List = listType;
+    blocks.push(<List key={`list-${blocks.length}`} className={`${List === "ul" ? "list-disc" : "list-decimal"} my-2 space-y-1 pl-5`}>{items.map((item, index) => <li key={index}>{renderBold(item, `list-${blocks.length}-${index}`)}</li>)}</List>);
+    items = [];
+    listType = null;
+  };
+
+  for (const line of lines) {
+    const bullet = line.match(/^\s*[-*]\s+(.+)$/);
+    const numbered = line.match(/^\s*\d+[.)]\s+(.+)$/);
+    const nextType = bullet ? "ul" : numbered ? "ol" : null;
+    if (nextType) {
+      flushParagraph();
+      if (listType && listType !== nextType) flushList();
+      listType = nextType;
+      items.push((bullet ?? numbered)![1]);
+    } else if (!line.trim()) {
+      flushParagraph();
+      flushList();
+    } else {
+      flushList();
+      paragraph.push(line.trim());
+    }
+  }
+  flushParagraph();
+  flushList();
+  return <div className="break-words">{blocks}</div>;
 }
 
 function AppointmentReminderCard({ conversationId, message, onResult }: { conversationId: string; message: ChatMessage; onResult: (message?: ChatMessage) => void }) {
